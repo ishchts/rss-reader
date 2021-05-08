@@ -1,0 +1,42 @@
+{
+  "name": "@hexlet/code",
+  "version": "0.0.0",
+  "description": "RSS aggregator",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "start": "webpack serve --open --env development",
+    "build": "webpack --env production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Il1ya1/frontend-project-lvl3.git"
+  },
+  "author": "Ilya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Il1ya1/frontend-project-lvl3/issues"
+  },
+  "homepage": "https://github.com/Il1ya1/frontend-project-lvl3#readme",
+  "devDependencies": {
+    "@babel/core": "7.14.0",
+    "@babel/preset-env": "7.14.1",
+    "babel-loader": "8.2.2",
+    "css-loader": "5.2.4",
+    "eslint": "7.26.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.22.1",
+    "html-webpack-plugin": "5.3.1",
+    "style-loader": "2.0.0",
+    "webpack": "5.36.2",
+    "webpack-cli": "4.7.0",
+    "webpack-dev-server": "3.11.2"
+  },
+  "dependencies": {
+    "bootstrap": "5.0.0",
+    "lodash": "4.17.21",
+    "normalize.css": "8.0.1"
+  }
+}
