@@ -42,8 +42,10 @@ const createPostItem = (postItem) => {
   return li;
 };
 
-const addPosts = (posts) => {
-  const itemsElements = posts.map(createPostItem);
+const addPosts = (posts, showedPostsIds) => {
+  const itemsElements = posts
+    .filter((i) => !showedPostsIds.includes(i.id))
+    .map(createPostItem);
   const rssPosts = document.querySelector('.js-posts');
   if (rssPosts.children.length === 0) {
     const header = document.createElement('h2');
@@ -125,13 +127,32 @@ export default (state, translator) => onChange(state, (path, value) => {
         case 'succeeded': {
           setLockSubmitFormButton(false);
           clearFormFeedback(true);
-          addPosts(state.items);
+          addPosts(state.items, state.showedPostsIds);
           addFeed(last(state.feed));
           renderSuccessFormFeedback('app.rssAdded', translator);
           break;
         }
         case 'failed': {
           setLockSubmitFormButton(false);
+          renderFailedFormFeedback(state.error, translator);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+      break;
+    }
+    case 'updated': {
+      switch (value) {
+        case 'start': {
+          break;
+        }
+        case 'success': {
+          addPosts(state.items, state.showedPostsIds);
+          break;
+        }
+        case 'error': {
           renderFailedFormFeedback(state.error, translator);
           break;
         }

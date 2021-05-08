@@ -3,6 +3,7 @@ import * as yup from 'yup';
 import makeRequest from './requester';
 import view from './view';
 import rssFeedParser from './rss-feed-parser';
+import updateFeeds from './rss-updater';
 import ru from '../locales/ru';
 
 import 'normalize.css';
@@ -20,6 +21,8 @@ const getFormValidationSchema = (feeds) => (
 
 const app = () => {
   const state = {
+    updated: '',
+    showedPostsIds: [],
     feed: [],
     items: [],
     form: {
@@ -74,6 +77,7 @@ const app = () => {
             watchedState.feed.push({ url: res.url, ...parsedFeed.feed });
             watchedState.items.push(...parsedFeed.items);
             watchedState.form.status = 'succeeded';
+            state.showedPostsIds.push(...parsedFeed.items.map((i) => i.id));
             watchedState.fields.url = {
               value: '',
               error: null,
@@ -91,6 +95,8 @@ const app = () => {
           watchedState.form.status = 'invalid';
         });
     });
+
+    updateFeeds(watchedState);
   });
 };
 
