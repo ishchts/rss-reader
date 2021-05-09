@@ -70,6 +70,9 @@ const app = () => {
       getFormValidationSchema(watchedState.feed).validate({ url: value })
         .then((res) => {
           makeRequest(res.url).then((resp) => {
+            if (resp.data === '') {
+              throw Error('app.rssError');
+            }
             const parsedFeed = rssFeedParser(resp.data);
             watchedState.feed.push({ url: res.url, ...parsedFeed.feed });
             watchedState.items.push(...parsedFeed.items);
