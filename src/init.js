@@ -1,13 +1,13 @@
 import i18next from 'i18next';
 import { setLocale } from 'yup';
 
-import resources from './locales/index.js';
+import resources from '../assets/locales/index.js';
 import { handleAddFeed, handleSelectLanguage } from './handlers.js';
 import initView from './view.js';
 
 export default () => {
   const state = {
-    lang: 'en',
+    lang: 'ru',
     form: {
       state: 'filling',
       error: null,

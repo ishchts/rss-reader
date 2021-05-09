@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import parseRSS from './parseRSS.js';
+import parseRSS from './parse-rss.js';
 
 const routes = {
   allOrigins: (url) => {

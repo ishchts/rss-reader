@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-import loadRSS from './loadRSS.js';
+import loadRSS from './load-rss.js';
 
 const links = [];
 

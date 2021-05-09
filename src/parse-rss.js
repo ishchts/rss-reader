@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-import purifyHTML from './purifyHTML.js';
-
 export default (link, content) => {
   const parser = new DOMParser();
 
@@ -17,7 +15,7 @@ export default (link, content) => {
   const title = rss.querySelector('title').textContent;
   const desc = rss.querySelector('description').textContent;
 
-  rss.querySelectorAll('item')
+  const posts = rss.querySelectorAll('item')
     .forEach((post) => {
       const postTitle = post.querySelector('title').textContent;
       const postDesc = post.querySelector('description').textContent;
@@ -26,14 +24,14 @@ export default (link, content) => {
       const postId = _.uniqueId();
 
       const data = {
-        id: postId, feedId, title: postTitle, desc: purifyHTML(postDesc), url: postLink,
+        id: postId, feedId, title: postTitle, desc: postDesc, url: postLink,
       };
 
       result.posts.push(data);
     });
 
   result.feed = {
-    id: feedId, title, desc, url: link,
+    id: feedId, title, desc, url: link, posts,
   };
 
   return result;

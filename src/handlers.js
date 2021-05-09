@@ -3,15 +3,15 @@
 import $ from 'jquery';
 import 'bootstrap';
 
-import validateLink from './validateLink.js';
-import loadRSS from './loadRSS.js';
-import updateRSS from './updateRSS.js';
+import validateLink from './validate-link.js';
+import loadRSS from './load-rss.js';
+import updateRSS from './update-rss.js';
 
 export const handleAddFeed = (e, state, i18nInstance) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
-  const link = formData.get('url').trim();
+  const link = formData.get('url');
 
   const error = validateLink(link, state.feeds);
   state.form.error = error;
