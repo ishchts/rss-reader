@@ -1,191 +1,152 @@
-import last from 'lodash/last';
 import onChange from 'on-change';
-import { Modal } from 'bootstrap';
 
-const markLinkAsRead = (element) => {
-  element.classList.remove('fw-bold');
-  element.classList.add('fw-normal');
+import { handleViewPost, handleCloseModal } from './handlers.js';
+
+const buildPosts = (state, posts, i18nInstance) => {
+  const postsContainer = document.querySelector('.posts');
+  postsContainer.innerHTML = `<h2>${i18nInstance.t('posts')}</h2>`;
+
+  const ul = document.createElement('ul');
+  ul.classList.add('list-group');
+
+  posts.forEach((post) => {
+    const isViewed = state.uiState.viewedPostsIds.includes(post.id);
+
+    const li = document.createElement('li');
+    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+    li.dataset.id = post.id;
+
+    li.innerHTML = `
+    <a href="${post.url}" class="${isViewed ? 'font-weight-normal' : 'font-weight-bold'}" target="_blank" rel="noopener noreferrer">
+      ${post.title}
+    </a>
+    <button type="button" class="btn btn-primary btn-sm">${i18nInstance.t('buttons.view')}</button>
+    `;
+
+    const a = li.querySelector('a');
+    const button = li.querySelector('button');
+
+    a.addEventListener('click', () => {
+      if (!isViewed) {
+        state.uiState.viewedPostsIds.push(post.id);
+      }
+    });
+
+    button.addEventListener('click', () => {
+      if (!isViewed) {
+        state.uiState.viewedPostsIds.push(post.id);
+      }
+
+      handleViewPost(post);
+    });
+
+    ul.append(li);
+  });
+
+  postsContainer.append(ul);
 };
 
-const showModal = (feedItem) => (e) => {
-  e.preventDefault();
-  const modal = new Modal(document.querySelector('#modal'));
-  modal.show();
-  const modalNode = document.querySelector('#modal');
-  const title = modalNode.querySelector('.modal-title');
-  title.textContent = feedItem.name;
-  const description = modalNode.querySelector('.post-description');
-  description.textContent = feedItem.description;
-  const readBtn = modalNode.querySelector('.modal-read-btn');
-  readBtn.setAttribute('href', feedItem.url);
-  const feedItemRow = document.querySelector(`[data-feed-item-id='${feedItem.id}']`);
-  markLinkAsRead(feedItemRow);
+const buildFeeds = (feeds, i18nInstance) => {
+  const feedsContainer = document.querySelector('.feeds');
+  feedsContainer.innerHTML = `<h2>${i18nInstance.t('feeds')}</h2>`;
+
+  const ul = document.createElement('ul');
+  ul.classList.add('list-group', 'mb-5');
+
+  feeds.forEach((feed) => {
+    const li = document.createElement('li');
+    li.classList.add('list-group-item');
+    li.dataset.id = feed.id;
+
+    li.innerHTML = `
+    <h3>${feed.title}</h3>
+    <p>${feed.desc}</p>
+    `;
+
+    ul.append(li);
+  });
+
+  feedsContainer.append(ul);
 };
 
-const createFeedItem = (item) => {
-  const li = document.createElement('li');
-  li.classList.add('list-group-item');
-  const header = document.createElement('h3');
-  header.textContent = item.name;
-  const description = document.createElement('p');
-  description.textContent = item.description;
-  li.append(header, description);
-  return li;
-};
-
-const addFeed = (feed) => {
-  const feedElement = createFeedItem(feed);
-  const feeds = document.querySelector('.js-feeds');
-  if (feeds.children.length === 0) {
-    const header = document.createElement('h2');
-    header.innerHTML = 'Фиды';
-    const list = document.createElement('ul');
-    list.classList.add('list-group', 'mb-5');
-    list.appendChild(feedElement);
-    feeds.append(header);
-    feeds.append(list);
-    return;
+const render = (state, i18nInstance) => {
+  if (state.feeds.length > 0) {
+    buildFeeds(state.feeds, i18nInstance);
+    buildPosts(state, state.posts, i18nInstance);
   }
-  const list = feeds.querySelector('.list-group');
-  list.appendChild(feedElement);
+
+  const fullArticleButton = document.querySelector('.full-article');
+  const closeButtons = document.querySelectorAll('[data-dismiss="modal"]');
+
+  fullArticleButton.textContent = i18nInstance.t('buttons.readArticle');
+  closeButtons[1].textContent = i18nInstance.t('buttons.close');
+
+  closeButtons.forEach((closeButton) => {
+    closeButton.addEventListener('click', handleCloseModal);
+  });
 };
 
-const createPostItem = (postItem) => {
-  const feedItemContentHtml = `
-      <a target="_blank" class="fw-bold" data-feed-item-id="${postItem.id}" href="${postItem.url}">${postItem.name}</a>
-      <button type="button" class="btn btn-primary btn-sm post-preview">Просмотр</button>
-  `.trim();
-  const li = document.createElement('li');
-  li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
-  li.innerHTML = feedItemContentHtml;
+const clearFeedback = () => {
+  const input = document.querySelector('.form-control');
+  const feedback = document.querySelector('.feedback');
 
-  li.querySelector('.post-preview').addEventListener('click', showModal(postItem));
-  // li.querySelector('a').addEventListener('click', (e) => markLinkAsRead(e.target));
-  return li;
-};
-
-const addPosts = (posts, showedPostsIds) => {
-  const itemsElements = posts
-    .filter((i) => !showedPostsIds.includes(i.id))
-    .map(createPostItem);
-  const rssPosts = document.querySelector('.js-posts');
-  if (rssPosts.children.length === 0) {
-    const header = document.createElement('h2');
-    const list = document.createElement('ul');
-    header.innerHTML = 'Посты';
-    list.classList.add('list-group');
-    rssPosts.append(header);
-    rssPosts.append(list);
-    list.append(...itemsElements);
-    return;
-  }
-  rssPosts.querySelector('.list-group').append(...itemsElements);
-};
-
-const clearFormFeedback = (isClearInput = false) => {
-  const feedback = document.querySelector('#form-feedback');
-  feedback.classList.remove(...feedback.classList);
-  feedback.classList.add('feedback');
   feedback.textContent = '';
-  const input = document.querySelector('.js-rss-form').querySelector('input');
-  input.classList.remove('is-invalid', 'is-valid');
-  if (isClearInput) {
-    input.value = '';
-  }
+  feedback.classList.remove('text-danger', 'text-success');
+  input.classList.remove('is-invalid');
 };
 
-const setLockSubmitFormButton = (isDisabled) => {
-  const submitButton = document.querySelector('.js-rss-form').querySelector('button');
-  return isDisabled
-    ? submitButton.setAttribute('disabled', true)
-    : submitButton.removeAttribute('disabled');
+const toggleForm = (status) => {
+  const submitButton = document.querySelector('[type="submit"]');
+  const input = document.querySelector('.form-control');
+
+  submitButton.disabled = status;
+  input.readOnly = status;
 };
 
-const renderSuccessFormFeedback = (message, translator) => {
-  const feedback = document.querySelector('#form-feedback');
-  feedback.classList.add('text-success');
-  feedback.textContent = translator(message);
-  document.querySelector('.js-form-control').classList.add('is-valid');
-};
+export default (state, i18nInstance) => {
+  const input = document.querySelector('.form-control');
+  const feedback = document.querySelector('.feedback');
 
-const renderFailedFormFeedback = (message, translator) => {
-  const feedback = document.querySelector('#form-feedback');
-  feedback.classList.add('text-danger');
-  document.querySelector('.js-form-control').classList.remove('is-valid');
-  feedback.textContent = translator(message);
-};
-
-const renderFormErrors = (fields, translator) => {
-  const input = document.querySelector('.js-form-control');
-  const feedback = document.querySelector('#form-feedback');
-
-  const field = fields.url;
-  if (field.error === null) {
-    input.classList.remove('is-invalid');
-    input.classList.add('is-valid');
-    clearFormFeedback();
-  } else {
-    input.classList.add('is-invalid');
-    input.classList.remove('is-valid');
-    feedback.classList.add('text-danger');
-    feedback.textContent = translator(field.error);
-  }
-};
-
-export default (state, translator) => onChange(state, (path, value) => {
-  switch (path) {
-    case 'form.status': {
+  const watchedState = onChange(state, (path, value) => {
+    if (path === 'form.state') {
       switch (value) {
-        case 'validating': {
-          setLockSubmitFormButton(true);
+        case 'pending':
+          toggleForm(true);
+          clearFeedback();
           break;
-        }
-        case 'invalid': {
-          setLockSubmitFormButton(false);
-          clearFormFeedback();
-          renderFormErrors(state.fields, translator);
+        case 'success':
+          toggleForm(false);
+          clearFeedback();
+          feedback.textContent = i18nInstance.t('success');
+          feedback.classList.add('text-success');
           break;
-        }
-        case 'succeeded': {
-          setLockSubmitFormButton(false);
-          clearFormFeedback(true);
-          addPosts(state.items, state.showedPostsIds);
-          addFeed(last(state.feed));
-          renderSuccessFormFeedback('app.rssAdded', translator);
+        case 'failed':
+          toggleForm(false);
+          clearFeedback();
+          feedback.textContent = state.form.error;
+          input.classList.add('is-invalid');
+          feedback.classList.add('text-danger');
           break;
-        }
-        case 'failed': {
-          setLockSubmitFormButton(false);
-          renderFailedFormFeedback(state.error, translator);
-          break;
-        }
-        default: {
-          break;
-        }
+        default:
+          throw new Error(`Unexpected state: ${value}`);
       }
-      break;
-    }
-    case 'updated': {
-      switch (value) {
-        case 'start': {
-          break;
-        }
-        case 'success': {
-          addPosts(state.items, state.showedPostsIds);
-          break;
-        }
-        case 'error': {
-          renderFailedFormFeedback(state.error, translator);
-          break;
-        }
-        default: {
-          break;
-        }
+    } else if (path === 'form.error') {
+      feedback.textContent = '';
+      if (value) {
+        input.classList.add('is-invalid');
+        feedback.classList.add('text-danger');
+        feedback.textContent = state.form.error;
+      } else {
+        input.classList.remove('is-invalid');
+        feedback.classList.remove('text-danger');
       }
-      break;
+    } else if (path === 'lang') {
+      clearFeedback();
+      render(watchedState, i18nInstance);
+    } else {
+      render(watchedState, i18nInstance);
     }
-    default: {
-      break;
-    }
-  }
-});
+  });
+
+  return watchedState;
+};

@@ -1,9 +1,10 @@
 # RSS Aggregator
-### Hexlet tests and linter status:
-[![Actions Status](https://github.com/Il1ya1/frontend-project-lvl3/workflows/hexlet-check/badge.svg)](https://github.com/Il1ya1/frontend-project-lvl3/actions)
+[![CI](https://github.com/VilerIT/rss-aggregator/actions/workflows/ci.yml/badge.svg)](https://github.com/VilerIT/rss-aggregator/actions/workflows/ci.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/19b005d80f1136496c1f/maintainability)](https://codeclimate.com/github/VilerIT/rss-aggregator/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/19b005d80f1136496c1f/test_coverage)](https://codeclimate.com/github/VilerIT/rss-aggregator/test_coverage)
 
-<a href="https://codeclimate.com/github/Il1ya1/frontend-project-lvl3-2/maintainability"><img src="https://api.codeclimate.com/v1/badges/4bc68f65146aefc3264b/maintainability" /></a>
+RSS Aggregator is a service to read and aggregate RSS feeds ([Wikipedia](https://en.wikipedia.org/wiki/RSS)).
 
-<a href="https://codeclimate.com/github/Il1ya1/frontend-project-lvl3-2/test_coverage"><img src="https://api.codeclimate.com/v1/badges/4bc68f65146aefc3264b/test_coverage" /></a>
+Feeds are updated every 5 seconds. Two languages are supported: English and Russian.
 
-111
+### [Try the service](https://vilerit-rss-aggregator.vercel.app/)

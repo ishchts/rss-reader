@@ -1,48 +1,50 @@
 {
-  "name": "@hexlet/code",
-  "version": "0.0.0",
-  "description": "RSS aggregator",
-  "main": "src/app.js",
-  "private": true,
+  "name": "rss-aggregator",
+  "version": "1.0.0",
+  "description": "An easy service to read and aggregate RSS feeds.",
+  "type": "module",
+  "main": "src/init.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack --watch",
-    "start": "webpack serve --open --env development",
-    "build": "webpack --env production"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "start": "npx webpack serve"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Il1ya1/frontend-project-lvl3.git"
+    "url": "git+https://github.com/VilerIT/rss-aggregator.git"
   },
-  "author": "Ilya",
-  "license": "ISC",
+  "author": "VilerIT",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Il1ya1/frontend-project-lvl3/issues"
+    "url": "https://github.com/VilerIT/rss-aggregator/issues"
   },
-  "homepage": "https://github.com/Il1ya1/frontend-project-lvl3#readme",
-  "devDependencies": {
-    "@babel/core": "7.14.0",
-    "@babel/preset-env": "7.14.1",
-    "babel-loader": "8.2.2",
-    "css-loader": "5.2.4",
-    "eslint": "7.26.0",
-    "eslint-config-airbnb-base": "14.2.1",
-    "eslint-plugin-import": "2.22.1",
-    "html-webpack-plugin": "5.3.1",
-    "style-loader": "2.0.0",
-    "webpack": "5.36.2",
-    "webpack-cli": "4.7.0",
-    "webpack-dev-server": "3.11.2"
-  },
+  "homepage": "https://github.com/VilerIT/rss-aggregator#readme",
   "dependencies": {
-    "@popperjs/core": "2.9.2",
-    "axios": "0.21.1",
-    "bootstrap": "5.0.0",
-    "i18next": "20.2.2",
-    "jquery": "3.6.0",
-    "lodash": "4.17.21",
-    "normalize.css": "8.0.1",
-    "on-change": "3.0.1",
-    "yup": "0.32.9"
+    "axios": "^0.21.1",
+    "bootstrap": "^4.6.0",
+    "dompurify": "^2.2.7",
+    "i18next": "^20.1.0",
+    "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
+    "on-change": "^2.2.3",
+    "popper.js": "^1.16.1",
+    "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@jest/globals": "^26.6.2",
+    "@testing-library/dom": "^7.30.3",
+    "@testing-library/jest-dom": "^5.11.10",
+    "css-loader": "^5.2.0",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.4",
+    "html-webpack-plugin": "^5.3.1",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3",
+    "nock": "^13.0.11",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.28.0",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
   }
 }
