@@ -5,9 +5,9 @@ import view from './view';
 import rssFeedParser from './rss-feed-parser';
 import updateFeeds from './rss-updater';
 import ru from '../locales/ru';
-
-import 'normalize.css';
+import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'normalize.css';
 import './assets/style.css';
 
 const getFormValidationSchema = (feeds) => (

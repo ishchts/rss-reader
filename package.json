@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "0.0.0",
   "description": "RSS aggregator",
-  "main": "index.js",
+  "main": "src/app.js",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -39,6 +39,7 @@
     "axios": "0.21.1",
     "bootstrap": "5.0.0",
     "i18next": "20.2.2",
+    "jquery": "3.6.0",
     "lodash": "4.17.21",
     "normalize.css": "8.0.1",
     "on-change": "3.0.1",

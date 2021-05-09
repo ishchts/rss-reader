@@ -1,5 +1,26 @@
 import last from 'lodash/last';
 import onChange from 'on-change';
+import { Modal } from 'bootstrap';
+
+const markLinkAsRead = (element) => {
+  element.classList.remove('fw-bold');
+  element.classList.add('fw-normal');
+};
+
+const showModal = (feedItem) => (e) => {
+  e.preventDefault();
+  const modal = new Modal(document.querySelector('#modal'));
+  modal.show();
+  const modalNode = document.querySelector('#modal');
+  const title = modalNode.querySelector('.modal-title');
+  title.textContent = feedItem.name;
+  const description = modalNode.querySelector('.post-description');
+  description.textContent = feedItem.description;
+  const readBtn = modalNode.querySelector('.modal-read-btn');
+  readBtn.setAttribute('href', feedItem.url);
+  const feedItemRow = document.querySelector(`[data-feed-item-id='${feedItem.id}']`);
+  markLinkAsRead(feedItemRow);
+};
 
 const createFeedItem = (item) => {
   const li = document.createElement('li');
@@ -31,13 +52,14 @@ const addFeed = (feed) => {
 
 const createPostItem = (postItem) => {
   const feedItemContentHtml = `
-      <a target="_blank" class="font-weight-bold" href="${postItem.url}">${postItem.name}</a>
-      <button type="button" class="btn btn-primary btn-sm">Просмотр</button>
+      <a target="_blank" class="fw-bold" data-feed-item-id="${postItem.id}" href="${postItem.url}">${postItem.name}</a>
+      <button type="button" class="btn btn-primary btn-sm post-preview">Просмотр</button>
   `.trim();
   const li = document.createElement('li');
   li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
   li.innerHTML = feedItemContentHtml;
-  // li.querySelector('.post-preview').addEventListener('click', showModal(feedItem));
+
+  li.querySelector('.post-preview').addEventListener('click', showModal(postItem));
   // li.querySelector('a').addEventListener('click', (e) => markLinkAsRead(e.target));
   return li;
 };

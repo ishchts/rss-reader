@@ -39,7 +39,7 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         title: 'RSS aggregator',
         filename: 'index.html',
-        template: 'template.html',
+        template: 'index.html',
       }),
     ],
   };
